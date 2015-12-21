@@ -1,18 +1,6 @@
 <?php
 	require('db.php');
-	session_start();
-
-	$user = false;
-	if (isset($_SESSION['user'])) {
-		$stmt = $db->prepare('SELECT * FROM users WHERE id = :id');
-		$stmt->execute(array(
-			'id' => $_SESSION['user']
-		));
-
-		if ($stmt->rowCount() == 1) {
-			$user = $stmt->fetch();
-		}
-	}
+	require('user.php');
 ?>
 
 <!DOCTYPE html>
@@ -29,7 +17,11 @@
 			<h1>Horaire officiels de tir</h1>
 
 			<?php if ($user) { ?>
-			<p>Connecté en tant que <?php echo $user['firstname'], ' ', $user['lastname']; ?>. <a href="logout.php">Déconnexion</a></p>
+			<p>
+				Connecté en tant que <?php echo $user['name']; ?>.
+				<?php if ($user['admin']) { ?><a href="admin.php">Administration</a><?php } ?>
+				<a href="logout.php">Déconnexion</a>
+			</p>
 			<?php } else { ?>
 			<p><a href="login.php">Accès officiels de tir</a></p>
 			<?php } ?>
