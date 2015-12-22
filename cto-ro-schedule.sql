@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 21, 2015 at 11:53 PM
+-- Generation Time: Dec 22, 2015 at 11:00 PM
 -- Server version: 10.1.9-MariaDB
 -- PHP Version: 5.6.15
 
@@ -23,6 +23,23 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `schedules`
+--
+
+CREATE TABLE `schedules` (
+  `date` date NOT NULL,
+  `message` varchar(128) NOT NULL,
+  `morningOpen` tinyint(1) NOT NULL,
+  `afternoonOpen` tinyint(1) NOT NULL,
+  `eveningOpen` tinyint(1) NOT NULL,
+  `morning` int(11) DEFAULT NULL,
+  `afternoon` int(11) DEFAULT NULL,
+  `evening` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
@@ -36,16 +53,14 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `users`
---
-
-INSERT INTO `users` (`id`, `email`, `password`, `name`, `active`, `admin`) VALUES
-(2, 'foo@bar.ca', '$2y$10$gi8.dcdzQyF3ZQ6cnocALuB.wLfiUthhBjAo5kXa6coM1rerFFk0C', 'Foo', 0, 1),
-(3, 'test@lol.ca', '', 'Test', 1, 0);
-
---
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `schedules`
+--
+ALTER TABLE `schedules`
+  ADD PRIMARY KEY (`date`);
 
 --
 -- Indexes for table `users`
@@ -61,7 +76,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
