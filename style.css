@@ -1,3 +1,40 @@
-.container {
-    
+#calendar {
+    width: 100%;
 }
+
+#calendar th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    width: calc(100% / 7);
+}
+
+#calendar th {
+    padding: 5px;
+    text-align: center;
+}
+
+/* http://absolide.tumblr.com/post/7317210512/full-css-fluid-squares */
+#calendar td div {
+    width: 50%;
+    height: 0;
+    padding-bottom: 50%;
+}
+
+/* http://stackoverflow.com/questions/22835430/make-table-cells-square */
+/*#calendar td {
+    position:relative;
+}
+
+#calendar td:after{
+    content: '';
+    display: block;
+    margin-top: 100%;
+}
+
+#calendar td div {
+    position:absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}*/
