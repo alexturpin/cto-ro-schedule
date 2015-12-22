@@ -38,6 +38,16 @@
 		header('Location: admin.php');
 		exit;
 	}
+
+	if (isset($_POST['toggle-status'])) {
+		$stmt = $db->prepare('UPDATE users SET active = NOT active WHERE id = :id');
+		$stmt->execute(array(
+			'id' => $_POST['user']
+		));
+
+		header('Location: admin.php');
+		exit;
+	}
 ?>
 
 <!DOCTYPE html>
@@ -85,9 +95,9 @@
 							</td>
 							<td>
 								<?php if (!$u['admin']) { ?>
-								<form>
+								<form method="post" action="admin.php">
 									<input type="hidden" name="user" value="<?php echo $u['id']; ?>">
-									<button type="submit" class="btn btn-default"><?php echo $u['active'] ? 'Désactiver' : 'Activer'; ?></button>
+									<button type="submit" class="btn btn-default" name="toggle-status"><?php echo $u['active'] ? 'Désactiver' : 'Activer'; ?></button>
 								</form>
 								<?php } else { echo '-'; } ?>
 							</td>
