@@ -6,6 +6,38 @@
 		header('Location: index.php');
 		exit;
 	}
+
+	$errors = array();
+	if (isset($_POST['new-user'])) {
+		if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+			$errors['email'] = 'Adresse courriel invalide.';
+		}
+
+		if (strlen($_POST['name']) < 3) {
+			$errors['name'] = 'Le nom doit contenir au moins 3 caractères.';
+		}
+
+		if (count($errors) == 0) {
+			$stmt = $db->prepare('INSERT INTO `users` (`id`, `email`, `password`, `name`, `active`, `admin`) VALUES (NULL, :email, \'\', :name, true, false)');
+			$stmt->execute(array(
+				'email' => $_POST['email'],
+				'name' => $_POST['name']
+			));
+
+			header('Location: admin.php');
+			exit;
+		}
+	}
+
+	if (isset($_POST['reset-password'])) {
+		$stmt = $db->prepare('UPDATE users SET password = \'\' WHERE id = :id');
+		$stmt->execute(array(
+			'id' => $_POST['user']
+		));
+
+		header('Location: admin.php');
+		exit;
+	}
 ?>
 
 <!DOCTYPE html>
@@ -37,14 +69,28 @@
 						$stmt = $db->prepare('SELECT * FROM users ORDER BY admin DESC, active DESC');
 						$stmt->execute();
 
-						while($user = $stmt->fetch()) {
+						while($u = $stmt->fetch()) {
 					?>
 						<tr>
-							<td><?php echo $user['name']; ?></td>
-							<td><a href="mailto:<?php echo $user['email']; ?>"><?php echo $user['email']; ?></a></td>
-							<td><?php echo $user['admin'] ? 'Administrateur' : ($user['active'] ? 'Actif' : 'Désactivé'); ?></td>
-							<td><?php if ($user['password'] != '') { ?><form><button type="submit" class="btn btn-default">Réinitialiser le mot de passe</button></form><?php } else { echo '-'; } ?></td>
-							<td><?php if (!$user['admin']) { ?><form><button type="submit" class="btn btn-default"><?php echo $user['active'] ? 'Désactiver' : 'Activer'; ?></button></form><?php } else { echo '-'; } ?></td>
+							<td><?php echo $u['name']; ?></td>
+							<td><a href="mailto:<?php echo $u['email']; ?>"><?php echo $u['email']; ?></a></td>
+							<td><?php echo $u['admin'] ? 'Administrateur' : ($u['active'] ? 'Actif' : 'Désactivé'); ?></td>
+							<td>
+								<?php if ($u['password'] != '' && $u['id'] != $user['id']) { ?>
+								<form method="post" action="admin.php">
+									<input type="hidden" name="user" value="<?php echo $u['id']; ?>">
+									<button type="submit" class="btn btn-default" name="reset-password">Réinitialiser le mot de passe</button>
+								</form>
+								<?php } else { echo '-'; } ?>
+							</td>
+							<td>
+								<?php if (!$u['admin']) { ?>
+								<form>
+									<input type="hidden" name="user" value="<?php echo $u['id']; ?>">
+									<button type="submit" class="btn btn-default"><?php echo $u['active'] ? 'Désactiver' : 'Activer'; ?></button>
+								</form>
+								<?php } else { echo '-'; } ?>
+							</td>
 						</tr>
 					<?php
 						}
@@ -53,7 +99,7 @@
 			</table>
 
 			<h2>Nouvel officiel de tir</h2>
-			<form class="form-horizontal" method="post" action="firstLogin.php">
+			<form class="form-horizontal" method="post" action="admin.php">
 				<div class="form-group <?php if (isset($errors['email'])) { echo 'has-error'; } ?>">
 					<label for="email" class="col-sm-2 control-label">Adresse courriel</label>
 					<div class="col-sm-10">
@@ -70,7 +116,7 @@
 				</div>
 				<div class="form-group">
 					<div class="col-sm-offset-2 col-sm-10">
-						<button type="submit" class="btn btn-default">Créer</button>
+						<button type="submit" class="btn btn-default" name="new-user">Créer</button>
 					</div>
 				</div>
 			</form>
