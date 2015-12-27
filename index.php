@@ -74,7 +74,7 @@
 					$date = new DateTime();
 				}
 
-				echo '<h2>', mb_convert_case(utf8_encode(strftime('%B %Y', $date->getTimestamp())), MB_CASE_TITLE), '</h2>';
+				echo '<h2>', ucfirst(utf8_encode(strftime('%B %Y', $date->getTimestamp()))), '</h2>';
 
 				$previousMonth = clone $date;
 				$previousMonth->modify('first day of previous month');

@@ -5,7 +5,7 @@
 #calendar th, #calendar td {
     border: 1px solid black;
     border-collapse: collapse;
-    width: calc(100% / 7);
+    width: 14.28%;
 }
 
 #calendar th {
