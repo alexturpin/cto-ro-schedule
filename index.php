@@ -31,11 +31,12 @@
 			'evening' => isset($_POST['slot-evening-open']) ? ($_POST['slot-evening'] !== '' ? $_POST['slot-evening'] : null) : null,
 		));
 
-		header('Location: index.php');
+		$date = new DateTime($_POST['date']);
+		header('Location: index.php?date=' . $date->format('Y-m'));
 		exit;
 	}
 
-	if(isset($_POST['assign']) && $user && $user['active']) {
+	if (isset($_POST['assign']) && $user && $user['active']) {
 		if (isset($slots[$_POST['slot']])) {
 			$stmt = $db->prepare('UPDATE schedules SET ' . $_POST['slot'] . ' = :user WHERE date = :date');
 			$stmt->execute(array(
@@ -43,7 +44,8 @@
 				'date' => $_POST['date']
 			));
 
-			header('Location: index.php');
+			$date = new DateTime($_POST['date']);
+			header('Location: index.php?date=' . $date->format('Y-m'));
 			exit;
 		}
 	}
@@ -156,8 +158,20 @@
 
 								<div class="list-group">
 								<?php
+									$daysDiff = $currentDate->diff($today);
 									foreach($slots as $key => $name) {
 										if (!$schedule[$key . 'Open']) continue;
+
+										$class = $schedule[$key] ? 'success' : '';
+										if ($class == '' && $daysDiff->invert) {
+											if ($daysDiff->d <= 1) {
+												$class = 'danger';
+											}
+											else if ($daysDiff->d <= 7) {
+												$class = 'warning';
+											}
+										}
+										$class = 'list-group-item-' . $class;
 								?>
 										<a
 											href=""
@@ -165,7 +179,7 @@
 											data-toggle="modal"
 											data-target="#assignModal"
 								<?php } ?>
-											class="list-group-item"
+											class="list-group-item <?php echo $class; ?>"
 											data-name="<?php echo $currentDateStr, ' à ', $name; ?>"
 											data-date="<?php echo $currentDateStr; ?>"
 											data-slot="<?php echo $key; ?>"
