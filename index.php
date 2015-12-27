@@ -85,8 +85,12 @@
 			?>
 
 			<p>
-				<a href="index.php?date=<?php echo $previousMonth->format('Y-m'); ?>" class="pull-left">Mois précédent</a>
-				<a href="index.php?date=<?php echo $nextMonth->format('Y-m'); ?>" class="pull-right">Mois suivant</a>
+				<a class="btn btn-default" href="index.php?date=<?php echo $previousMonth->format('Y-m'); ?>">
+					<span class="glyphicon glyphicon-menu-left"></span> Mois précédent
+				</a>
+				<a class="btn btn-default" href="index.php?date=<?php echo $nextMonth->format('Y-m'); ?>">
+					Mois suivant <span class="glyphicon glyphicon-menu-right"></span>
+				</a>
 			</p>
 			<table id="calendar">
 				<tr>
@@ -203,12 +207,24 @@
 			<?php if ($user) { ?>
 			<p>
 				Connecté en tant que <?php echo $user['name']; ?>.
-				<?php if ($user['admin']) { ?><a href="admin.php">Administration</a><?php } ?>
 				<a href="logout.php">Déconnexion</a>
-			</p>
 			<?php } else { ?>
-			<p><a href="login.php">Accès officiels de tir</a></p>
+				<a href="login.php">Accès officiels de tir</a>
+			</p>
 			<?php } ?>
+			<?php if ($user && $user['admin']) { ?>
+				<p class="btn-group">
+					<a class="btn btn-default" data-toggle="modal" data-target="#scheduleModal">
+						<span class="glyphicon glyphicon-pencil"></span> Modification de masse
+					</a>
+
+					<a class="btn btn-default" href="admin.php">
+						<span class="glyphicon glyphicon-wrench"></span> Administration
+					</a>
+				</p>
+			<?php 
+				}
+			?>
 		</div>
 
 		<div class="modal" id="scheduleModal" tabindex="-1" role="dialog">
