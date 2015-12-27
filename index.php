@@ -18,7 +18,7 @@
 		$users[$u['id']] = $u;
 	};
 
-	if (isset($_POST['update-schedule'])) {
+	if (isset($_POST['update-schedule']) && $user && $user['admin']) {
 		$stmt = $db->prepare('INSERT INTO `schedules` (`date`, `message`, `morningOpen`, `afternoonOpen`, `eveningOpen`, `morning`, `afternoon`, `evening`) VALUES (:date, :message, :morningOpen, :afternoonOpen, :eveningOpen, :morning, :afternoon, :evening) ON DUPLICATE KEY UPDATE message = :message, morningOpen = :morningOpen, afternoonOpen = :afternoonOpen, eveningOpen = :eveningOpen, morning = :morning, afternoon = :afternoon, evening = :evening');
 		$stmt->execute(array(
 			'date' => $_POST['date'],
@@ -35,7 +35,7 @@
 		exit;
 	}
 
-	if(isset($_POST['assign'])) {
+	if(isset($_POST['assign']) && $user && $user['active']) {
 		if (isset($slots[$_POST['slot']])) {
 			$stmt = $db->prepare('UPDATE schedules SET ' . $_POST['slot'] . ' = :user WHERE date = :date');
 			$stmt->execute(array(
@@ -140,9 +140,12 @@
 								);
 
 				?>
+
+				<?php if ($user && $user['admin']) { ?>
 								<button type="button" class="btn btn-default btn-sm pull-right" data-toggle="modal" data-target="#scheduleModal" data-schedule="<?php echo htmlentities(json_encode($schedule)); ?>">
 									<span class="glyphicon glyphicon-pencil"></span>
 								</button>
+				<?php } ?>
 								</div>
 
 				<?php
@@ -158,8 +161,10 @@
 								?>
 										<a
 											href=""
+								<?php if ($user && $user['active'] && !$schedule[$key]) { ?>
 											data-toggle="modal"
 											data-target="#assignModal"
+								<?php } ?>
 											class="list-group-item"
 											data-name="<?php echo $currentDateStr, ' à ', $name; ?>"
 											data-date="<?php echo $currentDateStr; ?>"

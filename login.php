@@ -12,12 +12,15 @@
 		$user = $stmt->fetch();
 
 		if (!$user) {
-			$error = 'Adresse courriel non reconnue. Veuillez vérifier l\'ortographe et parler à un administrateur si le problème persiste.';
+			$error = 'Adresse courriel non reconnue. Veuillez vérifier l\'ortographe et contacter un administrateur si le problème persiste.';
 		}
 		else {
 			if ($user['password'] == '') {
 				header('Location: firstLogin.php?email=' . $user['email']);
 				exit;
+			}
+			else if (!$user['active']) {
+				$error = 'Votre compte a été désactivé. Veuillez contacter un administrateur.';
 			}
 			else {
 				if (password_verify($_POST['password'], $user['password'])) {
