@@ -5,13 +5,7 @@
 	$dbhost = 'localhost';
 	$dberrmode = PDO::ERRMODE_EXCEPTION;
 
-	if ($_SERVER['SERVER_NAME'] == 'alexturpin.net') {
-		$dbname = '';
-		$dbuser = '';
-		$dbpassword = '';
-		$dbhost = '';
-		$dberrmode = PDO::ERRMODE_SILENT;
-	}
+	@include("db-{$_SERVER['SERVER_NAME']}.php");
 
 	try {
 		$db = new PDO("mysql:host=$dbhost;dbname=$dbname", $dbuser, $dbpassword, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
