@@ -30,6 +30,15 @@
     margin-bottom: 15px;
 }
 
+#calendar td .calendar-header span {
+    font-weight: 500;
+    font-size: 16px;
+}
+
 #calendar td .list-group {
     margin-bottom: 0;
+}
+
+#calendar td .list-group .list-group-item  {
+    padding: 5px;
 }

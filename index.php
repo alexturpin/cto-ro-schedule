@@ -128,10 +128,10 @@
 							$validDay = !($currentDay == 1 && $dayOfWeek < $firstDayOfMonth->format('w')) && $currentDay <= $daysInMonth;
 							$currentDate = $validDay ? new DateTime($date->format('Y-m-' . $currentDay)) : null;
 							$class = (!$validDay || $currentDate < $today) ? 'inactive' : ($currentDate == $today ? 'active' : '');
-							echo '<td class="' . $class . '"><div class="calendar-header">';
+							echo '<td class="' . $class . '"><div class="calendar-header"><span>';
 
 							if ($validDay) {
-								echo $currentDay++;
+								echo $currentDay++, '</span>';
 
 								$currentDateStr = $currentDate->format('Y-m-d');
 								$schedule = isset($monthSchedule[$currentDateStr]) ? $monthSchedule[$currentDateStr] : array(
@@ -148,17 +148,11 @@
 				?>
 
 				<?php if ($user && $user['admin']) { ?>
-								<button type="button" class="btn btn-default btn-sm pull-right" data-toggle="modal" data-target="#scheduleModal" data-schedule="<?php echo htmlentities(json_encode($schedule)); ?>">
+								<button type="button" class="btn btn-default btn-xs pull-right" data-toggle="modal" data-target="#scheduleModal" data-schedule="<?php echo htmlentities(json_encode($schedule)); ?>">
 									<span class="glyphicon glyphicon-pencil"></span>
 								</button>
 				<?php } ?>
 								</div>
-
-				<?php
-								if ($schedule['message']) {
-									echo '<p>', $schedule['message'], '</p>';
-								}
-				?>
 
 								<div class="list-group">
 								<?php
@@ -166,7 +160,7 @@
 									foreach($slots as $key => $name) {
 										if (!$schedule[$key . 'Open']) continue;
 
-										$class = $schedule[$key] ? 'success' : '';
+										/*$class = $schedule[$key] ? 'success' : '';
 										if ($class == '' && $daysDiff->invert) {
 											if ($daysDiff->d <= 1) {
 												$class = 'danger';
@@ -175,25 +169,32 @@
 												$class = 'warning';
 											}
 										}
-										$class = 'list-group-item-' . $class;
+										$class = 'list-group-item-' . $class;*/
 								?>
 										<a
-											href=""
+											href="#"
 								<?php if ($user && $user['active'] && !$schedule[$key]) { ?>
 											data-toggle="modal"
 											data-target="#assignModal"
 								<?php } ?>
-											class="list-group-item <?php echo $class; ?>"
+											class="list-group-item <?php /*echo $class;*/ ?>"
 											data-name="<?php echo $currentDateStr, ' à ', $name; ?>"
 											data-date="<?php echo $currentDateStr; ?>"
 											data-slot="<?php echo $key; ?>"
 											data-user="<?php echo $user['id']; ?>">
-											<?php echo $name; ?>: <?php echo $schedule[$key] !== null ? $users[$schedule[$key]]['name'] : 'À combler'; ?>
+											<strong><?php echo $name; ?></strong> <?php echo $schedule[$key] !== null ? $users[$schedule[$key]]['name'] : '<em>À combler</em>'; ?>
 										</a>
+								<?php
+									}
+
+									if ($schedule['message']) {
+								?>
+										<div class="list-group-item"><?php echo $schedule['message']; ?>
 								<?php
 									}
 								?>
 								</div>
+
 				<?php
 							}
 
