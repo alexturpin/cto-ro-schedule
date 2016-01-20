@@ -181,15 +181,15 @@
 								?>
 										<a
 											href="#"
-								<?php if ($user && $user['active'] && !$schedule[$key]) { ?>
+								<?php if ($user && $user['active']) { ?>
 											data-toggle="modal"
-											data-target="#assignModal"
+											data-target="#<?php echo $schedule[$key] ? 'info' : 'assign'; ?>Modal"
 								<?php } ?>
 											class="list-group-item <?php /*echo $class;*/ ?>"
 											data-name="<?php echo $currentDateStr, ' à ', $name; ?>"
 											data-date="<?php echo $currentDateStr; ?>"
 											data-slot="<?php echo $key; ?>"
-											data-user="<?php echo $user['id']; ?>">
+											data-user="<?php echo htmlentities(json_encode($user)); ?>">
 											<strong><?php echo $name; ?></strong> <?php echo $schedule[$key] !== null ? $users[$schedule[$key]]['name'] : '<em>À combler</em>'; ?>
 										</a>
 								<?php
@@ -315,6 +315,25 @@
 			</div>
 		</div>
 
+		<div class="modal" id="infoModal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title" id="infoModalTitle">Information sur plage horaire <span class="slot"></span></h4>
+					</div>
+					<form method="post" action="index.php">
+						<div class="modal-body">
+							<p>La plage horaire du <span class="slot"></span> est assignée à <span class="name"></span>. Vous pouvez le contacter par courriel au <a class="email"></a></p>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
 		<div class="modal" id="massScheduleModal" tabindex="-1" role="dialog">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
@@ -392,7 +411,13 @@
 				$("#assignModal span.slot").text($(this).data("name"));
 				$("#assignModal input[name='date']").val($(this).data("date"));
 				$("#assignModal input[name='slot']").val($(this).data("slot"));
-				$("#assignModal input[name='user']").val($(this).data("user"));
+				$("#assignModal input[name='user']").val($(this).data("user").id);
+			});
+
+			$("a[data-target='#infoModal'").click(function() {
+				$("#infoModal span.slot").text($(this).data("name"));
+				$("#infoModal span.name").text($(this).data("user").name);
+				$("#infoModal a.email").text($(this).data("user").email).prop("href", "mailto:" + $(this).data("user").email);
 			});
 		</script>
 	</body>
