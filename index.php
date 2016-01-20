@@ -10,6 +10,16 @@
 		'evening' => '18:00'
 	);
 
+	$daysOfWeek = array(
+		'Dimanche',
+		'Lundi',
+		'Mardi',
+		'Mercredi',
+		'Jeudi',
+		'Vendredi',
+		'Samedi',
+	);
+
 	$stmt = $db->prepare('SELECT * FROM users ORDER BY active DESC, name ASC');
 	$stmt->execute();
 
@@ -94,13 +104,11 @@
 			</p>
 			<table id="calendar">
 				<tr>
-					<th><h4>Dimanche</h4></th>
-					<th><h4>Lundi</h4></th>
-					<th><h4>Mardi</h4></th>
-					<th><h4>Mercredi</h4></th>
-					<th><h4>Jeudi</h4></th>
-					<th><h4>Vendredi</h4></th>
-					<th><h4>Samedi</h4></th>
+					<?php
+						foreach($daysOfWeek as $day => $name) {
+					?>
+						<th><h4><?php echo $name; ?></h4></th>
+					<?php } ?>
 				</tr>
 				<?php
 					$firstDayOfMonth = new DateTime($date->format('Y-m-01'));
@@ -215,9 +223,9 @@
 			<?php } ?>
 			<?php if ($user && $user['admin']) { ?>
 				<p class="btn-group">
-					<a class="btn btn-default" data-toggle="modal" data-target="#scheduleModal">
+					<!--<a class="btn btn-default" data-toggle="modal" data-target="#massScheduleModal">
 						<span class="glyphicon glyphicon-pencil"></span> Modification de masse
-					</a>
+					</a>-->
 
 					<a class="btn btn-default" href="admin.php">
 						<span class="glyphicon glyphicon-wrench"></span> Administration
@@ -246,6 +254,8 @@
 										<th>Club ouvert</th>
 										<th>Officiel de tir</th>
 									</tr>
+								</thead>
+								<tbody>
 									<?php
 										foreach($slots as $key => $name) {
 									?>
@@ -266,7 +276,7 @@
 										</td>
 									</tr>
 									<?php } ?>
-								</thead>
+								</tbody>
 							</table>
 
 							<label for="message">Message</label>
@@ -305,8 +315,58 @@
 			</div>
 		</div>
 
+		<div class="modal" id="massScheduleModal" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title" id="massScheduleModalTitle">Modification de masse aux plages horaires</h4>
+					</div>
+					<form method="post" action="index.php">
+						<div class="modal-body">
+							<input type="hidden" name="date">
+
+							<table class="table">
+								<thead>
+									<tr>
+										<th>Plage / Jour</th>
+									<?php
+										foreach($slots as $key => $name) {
+									?>
+										<th><?php echo $name; ?></th>
+									<?php } ?>
+									</tr>
+								</thead>
+								<tbody>
+									<?php
+										foreach($daysOfWeek as $day => $name) {
+									?>
+									<tr>
+										<th><?php echo $name; ?></th>
+										<?php
+											foreach($slots as $key => $name) {
+										?>
+											<td><input type="checkbox" id="slot-<?php echo $day; ?>-<?php echo $key; ?>-open" name="slot-<?php echo $day; ?>-<?php echo $key; ?>-open"></td>
+										<?php } ?>
+									</tr>
+									<?php } ?>
+								</tbody>
+							</table>
+
+							<label for="message">Message</label>
+							<textarea id="message" name="message" class="form-control" rows="3"></textarea>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+							<button type="submit" class="btn btn-primary" name="update-schedule">Enregistrer</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
 		<script>
-			$("button[data-target='#scheduleModal'").click(function() {
+			$("button[data-target='#massScheduleModal'").click(function() {
 				var schedule = $(this).data("schedule");
 
 				$("#scheduleModalTitle span").text(schedule.date);
@@ -320,14 +380,13 @@
 				});
 			});
 
-			$("input[id^='slot-'][type='checkbox']").change(function() {
+			$("#scheduleModal input[id^='slot-'][type='checkbox']").change(function() {
 				var select = $(this).closest("tr").find("select[id^='slot-']");
 				select.prop("disabled", !$(this).prop("checked"));
 				if (!$(this).prop("checked")) {
 					select.val("");
 				}
 			});
-
 
 			$("a[data-target='#assignModal'").click(function() {
 				$("#assignModal span.slot").text($(this).data("name"));
