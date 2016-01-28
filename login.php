@@ -3,7 +3,7 @@
 	session_start();
 
 	$error = '';
-	if (isset($_POST['email'])) {
+	if (isset($_POST['email']) && $_POST['email']) {
 		$stmt = $db->prepare('SELECT * FROM users WHERE email = :email');
 		$stmt->execute(array(
 			'email' => $_POST['email']

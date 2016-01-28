@@ -2,8 +2,6 @@
 	require('db.php');
 	require('user.php');
 
-	setlocale(LC_ALL, 'fr-CA');
-
 	$slots = array(
 		'morning' => '9:00',
 		'afternoon' => '13:00',
@@ -18,6 +16,21 @@
 		'Jeudi',
 		'Vendredi',
 		'Samedi',
+	);
+
+	$months = array(
+		'Janvier',
+		'Février',
+		'Mars',
+		'Avril',
+		'Mai',
+		'Juin',
+		'Juillet',
+		'Août',
+		'Septembre',
+		'Octobre',
+		'Novembre',
+		'Décembre'
 	);
 
 	$stmt = $db->prepare('SELECT * FROM users ORDER BY active DESC, name ASC');
@@ -86,7 +99,7 @@
 					$date = new DateTime();
 				}
 
-				echo '<h2>', ucfirst(utf8_encode(strftime('%B %Y', $date->getTimestamp()))), '</h2>';
+				echo '<h2>', $months[$date->format('n') - 1], ' ', $date->format('Y'), '</h2>';
 
 				$previousMonth = clone $date;
 				$previousMonth->modify('first day of previous month');
@@ -168,8 +181,8 @@
 									foreach($slots as $key => $name) {
 										if (!$schedule[$key . 'Open']) continue;
 
-										/*$class = $schedule[$key] ? 'success' : '';
-										if ($class == '' && $daysDiff->invert) {
+										$class = $schedule[$key] ? 'success' : '';
+										if ($class == '' && $daysDiff->invert && $daysDiff->m == 0) {
 											if ($daysDiff->d <= 1) {
 												$class = 'danger';
 											}
@@ -177,7 +190,7 @@
 												$class = 'warning';
 											}
 										}
-										$class = 'list-group-item-' . $class;*/
+										$class = 'list-group-item-' . $class;
 								?>
 										<a
 											href="#"
@@ -185,11 +198,14 @@
 											data-toggle="modal"
 											data-target="#<?php echo $schedule[$key] ? 'info' : 'assign'; ?>Modal"
 								<?php } ?>
-											class="list-group-item <?php /*echo $class;*/ ?>"
+											class="list-group-item <?php echo $class; ?>"
 											data-name="<?php echo $currentDateStr, ' à ', $name; ?>"
 											data-date="<?php echo $currentDateStr; ?>"
 											data-slot="<?php echo $key; ?>"
-											data-user="<?php echo htmlentities(json_encode($user)); ?>">
+								<?php if ($user) { ?>
+											data-user="<?php echo htmlentities(json_encode($users[$schedule[$key]])); ?>"
+								<?php } ?>
+											>
 											<strong><?php echo $name; ?></strong> <?php echo $schedule[$key] !== null ? $users[$schedule[$key]]['name'] : '<em>À combler</em>'; ?>
 										</a>
 								<?php
@@ -324,7 +340,7 @@
 					</div>
 					<form method="post" action="index.php">
 						<div class="modal-body">
-							<p>La plage horaire du <span class="slot"></span> est assignée à <span class="name"></span>. Vous pouvez le contacter par courriel au <a class="email"></a></p>
+							<p>La plage horaire du <span class="slot"></span> est assignée à <span class="name"></span>. <span class="email">Vous pouvez le contacter par courriel au <a class="email"></a></span></p>
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
@@ -418,6 +434,7 @@
 				$("#infoModal span.slot").text($(this).data("name"));
 				$("#infoModal span.name").text($(this).data("user").name);
 				$("#infoModal a.email").text($(this).data("user").email).prop("href", "mailto:" + $(this).data("user").email);
+				$("#infoModal span.email").toggle(!!$(this).data("user").email);
 			});
 		</script>
 	</body>
