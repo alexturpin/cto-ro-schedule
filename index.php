@@ -55,6 +55,7 @@
 		));
 
 		$date = new DateTime($_POST['date']);
+
 		header('Location: index.php?date=' . $date->format('Y-m'));
 		exit;
 	}
@@ -401,7 +402,7 @@
 		</div>
 
 		<script>
-			$("button[data-target='#massScheduleModal'").click(function() {
+			$("button[data-target='#scheduleModal'").click(function() {
 				var schedule = $(this).data("schedule");
 
 				$("#scheduleModalTitle span").text(schedule.date);
