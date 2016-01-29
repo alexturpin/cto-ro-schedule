@@ -198,6 +198,7 @@
 								<?php if ($user && $user['active']) { ?>
 											data-toggle="modal"
 											data-target="#<?php echo $schedule[$key] ? 'info' : 'assign'; ?>Modal"
+											data-current-user="<?php echo htmlentities(json_encode($user)); ?>"
 								<?php } ?>
 											class="list-group-item <?php echo $class; ?>"
 											data-name="<?php echo $currentDateStr, ' à ', $name; ?>"
@@ -428,7 +429,7 @@
 				$("#assignModal span.slot").text($(this).data("name"));
 				$("#assignModal input[name='date']").val($(this).data("date"));
 				$("#assignModal input[name='slot']").val($(this).data("slot"));
-				$("#assignModal input[name='user']").val($(this).data("user").id);
+				$("#assignModal input[name='user']").val($(this).data("currentUser").id);
 			});
 
 			$("a[data-target='#infoModal'").click(function() {
