@@ -135,6 +135,73 @@
 				</div>
 			</form>
 
+			<h2 id="stats">Statistiques</h2>
+			<?php
+				if (isset($_POST['stats'])) {
+					$stmt = $db->prepare('SELECT * FROM schedules WHERE date >= :start AND date <= :end AND (morning = :id OR afternoon = :id OR evening = :id) ORDER BY date ASC');
+					$stmt->execute(array(
+						'id' => $_POST['user'],
+						'start' => $_POST['start'],
+						'end' => $_POST['end']
+					));
+
+					$total = 0;
+			?>
+			<p>Plages travaillées par <?php echo $users[$_POST['user']]['name']; ?> entre <?php echo $_POST['start']; ?> et <?php echo $_POST['end']; ?>:</p>
+			<ul>
+			<?php
+					while($schedule = $stmt->fetch()) {
+						foreach($slots as $slot => $time) {
+							if ($schedule[$slot] === $_POST['user']) {
+								echo "<li>{$schedule['date']} à $time</li>";
+								$total++;
+							}
+						}
+					}
+			?>
+			</ul>
+			<p>Nombre total de périodes travaillées: <strong><?php echo $total; ?></strong>.</p>
+			<?php
+				}
+			?>
+
+			<p>Pour obtenir les statistiques sur un officiel, veuillez le choisir dans la liste et fournir deux dates selon le format <code>YYYY-MM-DD</code>.</p>
+			<form class="form-horizontal" method="post" action="admin.php#stats">
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="user">Officiel</label>
+					<div class="col-sm-10">
+						<select id="user" name="user" class="form-control">
+						<?php
+							$stmt = $db->prepare('SELECT * FROM users ORDER BY name ASC');
+							$stmt->execute();
+
+							while($u = $stmt->fetch()) {
+						?>
+							<option value="<?php echo $u['id']; ?>"><?php echo $u['name']; ?></option>
+						<?php
+							}
+						?>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="start">Date de début</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="start" name="start" placeholder="YYYY-MM-DD">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="end">Date de fin</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="end" name="end" placeholder="YYYY-MM-DD">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-10">
+						<button type="submit" class="btn btn-default" name="stats">Afficher</button>
+					</div>
+				</div>
+			</form>
 
 			<p><a href="index.php">Retour au calendrier</a></p>
 		</div>
