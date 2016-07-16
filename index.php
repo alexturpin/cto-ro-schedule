@@ -4,7 +4,7 @@
 
 	$slots = array(
 		'morning' => '9:00',
-		'afternoon' => '13:00',
+		'afternoon' => '12:30',
 		'evening' => '18:00'
 	);
 
