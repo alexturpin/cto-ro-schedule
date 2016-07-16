@@ -195,7 +195,7 @@
 								?>
 										<a
 											href="#"
-								<?php if ($user && $user['active']) { ?>
+								<?php if ($user && $user['active'] && $currentDate >= $today) { ?>
 											data-toggle="modal"
 											data-target="#<?php echo $schedule[$key] ? 'info' : 'assign'; ?>Modal"
 											data-current-user="<?php echo htmlentities(json_encode($user)); ?>"
