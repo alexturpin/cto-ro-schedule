@@ -1,6 +1,7 @@
 <?php
 	require('db.php');
 	require('user.php');
+	require('constants.php');
 
 	if (isset($_POST['update-schedule']) && $user && $user['admin']) {
 		$stmt = $db->prepare('INSERT INTO `schedules` (`date`, `message`, `morningOpen`, `afternoonOpen`, `eveningOpen`, `morning`, `afternoon`, `evening`) VALUES (:date, :message, :morningOpen, :afternoonOpen, :eveningOpen, :morning, :afternoon, :evening) ON DUPLICATE KEY UPDATE message = :message, morningOpen = :morningOpen, afternoonOpen = :afternoonOpen, eveningOpen = :eveningOpen, morning = :morning, afternoon = :afternoon, evening = :evening');

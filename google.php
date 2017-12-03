@@ -2,6 +2,7 @@
 	require('vendor/autoload.php');
 	require('db.php');
 	require('user.php');
+	require('constants.php');
 
 	$vCalendar = new \Eluceo\iCal\Component\Calendar('http://alexturpin.net');
 	$vCalendar->setName('Officiels CTO');

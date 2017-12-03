@@ -1,6 +1,7 @@
 <?php
 	require('db.php');
 	require('user.php');
+	require('constants.php');
 
 	if (!$user || !$user['admin']) {
 		header('Location: index.php');
