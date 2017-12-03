@@ -18,6 +18,9 @@
 		foreach($slots as $key => $name) {
 			if (!$daySchedule[$key . 'Open']) continue;
 
+			if (isset($_GET['combler']) && $_GET['combler'] == 'false' && $daySchedule[$key] == null) continue;
+			if (isset($_GET['combler']) && $_GET['combler'] == 'true' && $daySchedule[$key] !== null) continue;
+
 			$vEvent = new \Eluceo\iCal\Component\Event();
 			$vEvent
 				->setDtStart(new \DateTime($daySchedule['date']))
