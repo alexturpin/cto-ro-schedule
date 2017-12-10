@@ -5,7 +5,8 @@
 	require('constants.php');
 
 	$vCalendar = new \Eluceo\iCal\Component\Calendar('http://alexturpin.net');
-	$vCalendar->setName('Officiels CTO');
+	$tag = (isset($_GET['combler']) && $_GET['combler'] == 'true') ? ': À combler' : '';
+	$vCalendar->setName('Officiels CTO' . $tag);
 
 	$date = new DateTime();
 	$firstDayOfMonth = new DateTime($date->format('Y-m-01'));
