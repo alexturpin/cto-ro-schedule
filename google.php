@@ -31,6 +31,17 @@
 
 			$vCalendar->addComponent($vEvent);
 		}
+
+		if ($daySchedule['message'] && isset($_GET['combler']) && $_GET['combler'] == 'true') {
+			$vEvent = new \Eluceo\iCal\Component\Event();
+			$vEvent
+				->setDtStart(new \DateTime($daySchedule['date']))
+				->setDtEnd(new \DateTime($daySchedule['date']))
+				->setNoTime(true)
+				->setSummary($daySchedule['message']);
+
+			$vCalendar->addComponent($vEvent);
+		}
 	}
 
 	header('Content-Type: text/calendar; charset=utf-8');
