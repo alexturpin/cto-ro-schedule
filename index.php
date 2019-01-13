@@ -401,5 +401,8 @@
 				$("#infoModal span.email").toggle(!!$(this).data("user").email);
 			});
 		</script>
+		<?php
+			require('tracking.php');
+		?>
 	</body>
 </html>

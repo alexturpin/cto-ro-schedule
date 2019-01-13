@@ -81,5 +81,8 @@
 			<p><a href="firstLogin.php">Première connexion?</a></p>
 			<p><a href="index.php">Retour au calendrier</a></p>
 		</div>
+		<?php
+			require('tracking.php');
+		?>
 	</body>
 </html>
