@@ -81,7 +81,7 @@
 				</thead>
 				<tbody>
 					<?php
-						$stmt = $db->prepare('SELECT * FROM users ORDER BY admin DESC, active DESC, name ASC');
+						$stmt = $db->prepare('SELECT * FROM users WHERE active = true ORDER BY admin DESC, name ASC');
 						$stmt->execute();
 
 						while($u = $stmt->fetch()) {
