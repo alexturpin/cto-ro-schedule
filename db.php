@@ -6,6 +6,7 @@
 	$dberrmode = PDO::ERRMODE_EXCEPTION;
 
 	@include("db-{$_SERVER['SERVER_NAME']}.php");
+	@include('db-prod.php');
 
 	try {
 		$db = new PDO("mysql:host=$dbhost;dbname=$dbname", $dbuser, $dbpassword, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));

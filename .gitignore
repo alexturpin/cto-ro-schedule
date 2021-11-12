@@ -1,2 +1,3 @@
-db-alexturpin.net.php
+db-*.php
 vendor
+composer.phar
