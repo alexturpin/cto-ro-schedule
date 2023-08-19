@@ -4,7 +4,7 @@
 	require('user.php');
 	require('constants.php');
 
-	$vCalendar = new \Eluceo\iCal\Component\Calendar('http://alexturpin.net');
+	$vCalendar = new \Eluceo\iCal\Component\Calendar('https://horaire.clubtiroutaouais.ca');
 	$tag = (isset($_GET['combler']) && $_GET['combler'] == 'true') ? ': À combler' : '';
 	$vCalendar->setName('Officiels CTO' . $tag);
 

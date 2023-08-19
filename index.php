@@ -52,7 +52,8 @@
 	</head>
 	<body>
 		<div class="container">
-			<h1>Horaire officiels de tir</h1>
+			<a href="https://www.clubtiroutaouais.ca/calendrier">Retour au Club de tir de l'Outaouais</a>
+			<h1>Horaire officiels de tir de l'Outaouais</h1>
 
 			<?php
 				try {
