@@ -153,7 +153,7 @@
 			<?php
 					while($schedule = $stmt->fetch()) {
 						foreach($slots as $slot => $time) {
-							if ($schedule[$slot] === $_POST['user']) {
+							if ($schedule[$slot] == $_POST['user']) {
 								echo "<li>{$schedule['date']} à $time</li>";
 								$total++;
 							}
