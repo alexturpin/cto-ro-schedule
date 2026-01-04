@@ -1,5 +1,13 @@
 # cto-ro-schedule
 
+## Deployment
+
+With `lftp` installed (`brew install lftp`), run:
+
+```bash
+./deploy.sh
+```
+
 ## Google Calendar integration
 
 ctoutaouais@gmail.com has three calendars
