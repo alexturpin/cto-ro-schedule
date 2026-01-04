@@ -173,7 +173,7 @@
 					<div class="col-sm-10">
 						<select id="user" name="user" class="form-control">
 						<?php
-							$stmt = $db->prepare('SELECT * FROM users ORDER BY name ASC');
+							$stmt = $db->prepare('SELECT * FROM users WHERE active = true ORDER BY name ASC');
 							$stmt->execute();
 
 							while($u = $stmt->fetch()) {
