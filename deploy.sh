@@ -17,6 +17,9 @@ REMOTE_PATH="/public_html"
 
 echo "Deploying to $FTP_HOST..."
 
+# Install PHP dependencies locally before deploy
+composer install --no-dev --prefer-dist
+
 lftp -c "
 set ssl:verify-certificate no;
 open -u $FTP_USER,$FTP_PASS $FTP_HOST;
