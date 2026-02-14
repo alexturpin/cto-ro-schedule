@@ -1,4 +1,7 @@
 <?php
+	ini_set('display_errors', '0');
+	error_reporting(E_ALL & ~E_DEPRECATED & ~E_WARNING & ~E_NOTICE);
+
 	require('vendor/autoload.php');
 	require('db.php');
 	require('user.php');
@@ -7,6 +10,14 @@
 	$vCalendar = new \Eluceo\iCal\Component\Calendar('https://horaire.clubtiroutaouais.ca');
 	$tag = (isset($_GET['combler']) && $_GET['combler'] == 'true') ? ': À combler' : '';
 	$vCalendar->setName('Officiels CTO' . $tag);
+	$vCalendar->setPublishedTTL('PT1H');
+
+	$feedType = 'all';
+	if (isset($_GET['combler']) && $_GET['combler'] == 'true') {
+		$feedType = 'combler-true';
+	} elseif (isset($_GET['combler']) && $_GET['combler'] == 'false') {
+		$feedType = 'combler-false';
+	}
 
 	$date = new DateTime();
 	$firstDayOfMonth = new DateTime($date->format('Y-m-01'));
@@ -22,7 +33,8 @@
 			if (isset($_GET['combler']) && $_GET['combler'] == 'false' && $daySchedule[$key] == null) continue;
 			if (isset($_GET['combler']) && $_GET['combler'] == 'true' && $daySchedule[$key] !== null) continue;
 
-			$vEvent = new \Eluceo\iCal\Component\Event();
+			$uniqueId = sprintf('%s-%s-%s@horaire.clubtiroutaouais.ca', $daySchedule['date'], $key, $feedType);
+			$vEvent = new \Eluceo\iCal\Component\Event($uniqueId);
 			$vEvent
 				->setDtStart(new \DateTime($daySchedule['date']))
 				->setDtEnd(new \DateTime($daySchedule['date']))
@@ -33,7 +45,8 @@
 		}
 
 		if ($daySchedule['message'] && isset($_GET['combler']) && $_GET['combler'] == 'true') {
-			$vEvent = new \Eluceo\iCal\Component\Event();
+			$uniqueId = sprintf('%s-message-%s@horaire.clubtiroutaouais.ca', $daySchedule['date'], $feedType);
+			$vEvent = new \Eluceo\iCal\Component\Event($uniqueId);
 			$vEvent
 				->setDtStart(new \DateTime($daySchedule['date']))
 				->setDtEnd(new \DateTime($daySchedule['date']))
@@ -44,8 +57,9 @@
 		}
 	}
 
-	header('Content-Type: text/calendar; charset=utf-8');
-	header('Content-Disposition: attachment; filename="cal.ics"');
+	header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+	header('Pragma: no-cache');
+	header('Expires: 0');
 
 	echo $vCalendar->render();
 ?>
